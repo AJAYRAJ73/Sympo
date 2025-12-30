@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login & Signup | Professional</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --blue: #3b82f6;
+  --yellow: #facc15;
+  --muted: #475569;
+  --radius: 16px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Body & blurred background */
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  overflow: hidden;
+  background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  backdrop-filter: blur(12px);
+  background: rgba(0,0,0,0.2);
+  z-index: 0;
+}
+
+/* Confetti canvas */
+#confetti-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* Glass Card */
+.container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  background: rgba(255,255,255,0.25);
+  border-radius: var(--radius);
+  border: 1px solid rgba(255,255,255,0.3);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+  padding: 30px 40px;
+  animation: floatCard 6s ease-in-out infinite;
+}
+
+@keyframes floatCard {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Headings */
+h2 {
+  text-align: center;
+  color: var(--blue);
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 28px;
+  opacity: 0;
+  animation: fadeSlide 0.8s forwards;
+}
+
+@keyframes fadeSlide {
+  0% { opacity: 0; transform: translateY(-20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Input fields */
+.field {
+  position: relative;
+  margin: 20px 0 10px 0;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.1);
+  background: rgba(255,255,255,0.6);
+  outline: none;
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  transition: 0.3s all;
+}
+
+input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 8px rgba(59,130,246,0.5);
+}
+
+label {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  color: #64748b;
+  font-size: 14px;
+  pointer-events: none;
+  transition: 0.3s all;
+  background: transparent;
+}
+
+input:focus + label,
+input:not(:placeholder-shown) + label {
+  top: -10px;
+  font-size: 12px;
+  color: var(--blue);
+  background: rgba(255,255,255,0.25);
+  padding: 0 4px;
+  border-radius: 4px;
+}
+
+/* Buttons */
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  color: #fff;
+  background: linear-gradient(90deg, var(--blue), var(--yellow));
+  background-size: 200% 200%;
+  animation: gradientShift 4s ease infinite;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Toggle text */
+p {
+  text-align: center;
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 15px;
+}
+
+.toggle {
+  cursor: pointer;
+  color: var(--blue);
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.toggle:hover {
+  color: var(--yellow);
+  transform: scale(1.05);
+}
+
+/* Form fade animation */
+form {
+  animation: fadeSlide 0.5s forwards;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .container { padding: 25px 20px; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<div class="container" id="auth-container">
+<h2 id="form-title"> </h2>
+  <h2 id="form-title">Login</h2>
+
+  <form id="login-form">
+    <div class="field">
+      <input type="email" id="login-email" placeholder=" " required>
+      <label for="login-email">Email</label>
+    </div>
+    <div class="field">
+      <input type="password" id="login-password" placeholder=" " required>
+      <label for="login-password">Password</label>
+    </div>
+    <button type="submit">Login</button>
+    <p>Don't have an account? <span class="toggle" id="show-signup">Sign up</span></p>
+  </form>
+
+  <form id="signup-form" style="display:none">
+    <div class="field">
+      <input type="text" id="signup-name" placeholder=" " required>
+      <label for="signup-name">Full Name</label>
+    </div>
+    <div class="field">
+      <input type="email" id="signup-email" placeholder=" " required>
+      <label for="signup-email">Email</label>
+    </div>
+    <div class="field">
+      <input type="password" id="signup-password" placeholder=" " required>
+      <label for="signup-password">Password</label>
+    </div>
+    <button type="submit">Sign Up</button>
+    <p>Already have an account? <span class="toggle" id="show-login">Login</span></p>
+  </form>
+</div>
+
+<script>
+// Form toggle
+const loginForm = document.getElementById('login-form');
+const signupForm = document.getElementById('signup-form');
+const showSignup = document.getElementById('show-signup');
+const showLogin = document.getElementById('show-login');
+const formTitle = document.getElementById('form-title');
+
+showSignup.addEventListener('click', () => {
+  loginForm.style.display = 'none';
+  signupForm.style.display = 'block';
+  formTitle.textContent = 'Sign Up';
+  signupForm.style.animation = 'fadeSlide 0.5s forwards';
+});
+
+showLogin.addEventListener('click', () => {
+  signupForm.style.display = 'none';
+  loginForm.style.display = 'block';
+  formTitle.textContent = 'Login';
+  loginForm.style.animation = 'fadeSlide 0.5s forwards';
+});
+
+// Confetti setup
+const canvas = document.getElementById('confetti-canvas');
+const ctx = canvas.getContext('2d');
+let confettiParticles = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+function createConfetti(x, y) {
+  for (let i = 0; i < 100; i++) {
+    confettiParticles.push({
+      x: x,
+      y: y,
+      r: Math.random() * 6 + 4,
+      d: Math.random() * 15 + 5,
+      color: `hsl(${Math.random() * 360}, 80%, 60%)`,
+      tilt: Math.random() * 10 - 10,
+      tiltAngleIncrement: Math.random() * 0.07 + 0.05,
+      tiltAngle: 0
+    });
+  }
+}
+
+function drawConfetti() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  confettiParticles.forEach((p, i) => {
+    ctx.beginPath();
+    ctx.lineWidth = p.r / 2;
+    ctx.strokeStyle = p.color;
+    ctx.moveTo(p.x + p.tilt + p.r / 4, p.y);
+    ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 4);
+    ctx.stroke();
+
+    p.tiltAngle += p.tiltAngleIncrement;
+    p.x += Math.sin(p.tiltAngle) * 2;
+    p.y += (Math.cos(p.tiltAngle + p.d) + 2 + p.r / 2) * 0.5;
+
+    if (p.y > canvas.height) {
+      confettiParticles.splice(i, 1);
+    }
+  });
+  requestAnimationFrame(drawConfetti);
+}
+drawConfetti();
+
+// Form submission
+loginForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const email = document.getElementById('login-email').value;
+  alert(`Logged in as ${email}`);
+});
+
+signupForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const name = document.getElementById('signup-name').value;
+  alert(`Welcome, ${name}! Your account has been created.`);
+  createConfetti(window.innerWidth/2, window.innerHeight/2);
+  signupForm.reset();
+  showLogin.click();
+});
+</script>
+
+</body>
+</html>
